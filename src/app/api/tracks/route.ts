@@ -15,22 +15,14 @@ export async function POST(req: Request) {
   const title = form.get("title")?.toString().trim();
   const genre = form.get("genre")?.toString().trim();
   const description = form.get("description")?.toString().trim() || null;
-  const isFree = form.get("isFree") === "true";
-  const priceCents = isFree
-    ? 0
-    : Math.round(Number(form.get("price") || 0) * 100);
-  const audioFile = form.get("audio") as File | null;
-  const coverFile = form.get("cover") as File | null;
+  const source = form.get("source")?.toString() === "SOUNDCLOUD" ? "SOUNDCLOUD" : "UPLOAD";
 
-  if (!title || !genre || !audioFile || audioFile.size === 0) {
+  if (!title || !genre) {
     return NextResponse.json(
-      { error: "Título, gênero e arquivo de áudio são obrigatórios." },
+      { error: "Título e gênero são obrigatórios." },
       { status: 400 }
     );
   }
-
-  const uploadsDir = path.join(process.cwd(), "public", "uploads");
-  await fs.mkdir(uploadsDir, { recursive: true });
 
   const baseSlug = slugify(title) || "faixa";
   let slug = baseSlug;
@@ -38,6 +30,48 @@ export async function POST(req: Request) {
   while (await prisma.track.findUnique({ where: { slug } })) {
     slug = `${baseSlug}-${n++}`;
   }
+
+  if (source === "SOUNDCLOUD") {
+    const soundcloudUrl = form.get("soundcloudUrl")?.toString().trim();
+    if (!soundcloudUrl || !/^https?:\/\/(www\.)?soundcloud\.com\//.test(soundcloudUrl)) {
+      return NextResponse.json(
+        { error: "Cole um link válido do SoundCloud (https://soundcloud.com/...)." },
+        { status: 400 }
+      );
+    }
+
+    const track = await prisma.track.create({
+      data: {
+        title,
+        slug,
+        genre,
+        description,
+        source: "SOUNDCLOUD",
+        soundcloudUrl,
+        isFree: true,
+        priceCents: 0,
+      },
+    });
+
+    return NextResponse.json({ ok: true, track });
+  }
+
+  const isFree = form.get("isFree") === "true";
+  const priceCents = isFree
+    ? 0
+    : Math.round(Number(form.get("price") || 0) * 100);
+  const audioFile = form.get("audio") as File | null;
+  const coverFile = form.get("cover") as File | null;
+
+  if (!audioFile || audioFile.size === 0) {
+    return NextResponse.json(
+      { error: "Selecione o arquivo de áudio." },
+      { status: 400 }
+    );
+  }
+
+  const uploadsDir = path.join(process.cwd(), "public", "uploads");
+  await fs.mkdir(uploadsDir, { recursive: true });
 
   const audioExt = path.extname(audioFile.name) || ".mp3";
   const audioFileName = `${slug}-${Date.now()}${audioExt}`;
@@ -65,6 +99,7 @@ export async function POST(req: Request) {
       description,
       coverUrl,
       audioUrl: `/uploads/${audioFileName}`,
+      source: "UPLOAD",
       isFree,
       priceCents,
     },

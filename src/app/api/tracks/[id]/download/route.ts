@@ -27,6 +27,13 @@ export async function GET(
     );
   }
 
+  if (track.source !== "UPLOAD" || !track.audioUrl) {
+    return NextResponse.json(
+      { error: "Esta faixa só está disponível para ouvir no SoundCloud." },
+      { status: 400 }
+    );
+  }
+
   await prisma.download.upsert({
     where: { userId_trackId: { userId: session.user.id, trackId: track.id } },
     update: {},

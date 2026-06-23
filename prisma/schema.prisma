@@ -26,21 +26,28 @@ model User {
   downloads    Download[]
 }
 
+enum TrackSource {
+  UPLOAD
+  SOUNDCLOUD
+}
+
 model Track {
-  id          String     @id @default(cuid())
-  title       String
-  slug        String     @unique
-  genre       String
-  description String?
-  coverUrl    String
-  audioUrl    String
-  previewUrl  String?
-  priceCents  Int        @default(0)
-  isFree      Boolean    @default(true)
-  published   Boolean    @default(true)
-  releasedAt  DateTime   @default(now())
-  createdAt   DateTime   @default(now())
-  downloads   Download[]
+  id            String      @id @default(cuid())
+  title         String
+  slug          String      @unique
+  genre         String
+  description   String?
+  coverUrl      String?
+  audioUrl      String?
+  previewUrl    String?
+  source        TrackSource @default(UPLOAD)
+  soundcloudUrl String?
+  priceCents    Int         @default(0)
+  isFree        Boolean     @default(true)
+  published     Boolean     @default(true)
+  releasedAt    DateTime    @default(now())
+  createdAt     DateTime    @default(now())
+  downloads     Download[]
 }
 
 model Download {

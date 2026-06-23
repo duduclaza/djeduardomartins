@@ -25,35 +25,58 @@ async function main() {
 
   console.log(`Webmaster pronto: ${admin.email}`);
 
-  const trackCount = await prisma.track.count();
-  if (trackCount === 0) {
-    await prisma.track.createMany({
-      data: [
-        {
-          title: "Pandora (Tribal Mix)",
-          slug: "pandora-tribal-mix",
-          genre: "Tribal House",
-          description:
-            "Faixa autoral de tribal house com pegada de festa, ideal para pista cheia.",
-          coverUrl: "/images/covers/placeholder-1.svg",
-          audioUrl: "/audio/placeholder-track.wav",
-          isFree: true,
-          priceCents: 0,
-        },
-        {
-          title: "Pride Anthem",
-          slug: "pride-anthem",
-          genre: "Pop House",
-          description: "Hino para a comunidade, energia pop com base house.",
-          coverUrl: "/images/covers/placeholder-2.svg",
-          audioUrl: "/audio/placeholder-track-2.wav",
-          isFree: true,
-          priceCents: 0,
-        },
-      ],
+  const tracks = [
+    {
+      title: "Queen of the Sound",
+      slug: "queen-of-the-sound",
+      genre: "Tribal House",
+      source: "SOUNDCLOUD" as const,
+      soundcloudUrl:
+        "https://soundcloud.com/djeduardomartinsoficial/queen-of-the-sound-dj-eduardo",
+    },
+    {
+      title: "Extravaganza (Original Mix)",
+      slug: "extravaganza-original-mix",
+      genre: "Tribal House",
+      source: "SOUNDCLOUD" as const,
+      soundcloudUrl:
+        "https://soundcloud.com/djeduardomartinsoficial/extravaganza-original-mix-dj",
+    },
+    {
+      title: "Fashionista (Original Mix)",
+      slug: "fashionista-original-mix",
+      genre: "Tribal House",
+      source: "SOUNDCLOUD" as const,
+      soundcloudUrl:
+        "https://soundcloud.com/djeduardomartinsoficial/fashionista-original-mix-dj",
+    },
+    {
+      title: "Abracadabra (Lady Gaga - Remix Sax)",
+      slug: "abracadabra-lady-gaga-remix-sax",
+      genre: "Remix",
+      source: "SOUNDCLOUD" as const,
+      soundcloudUrl:
+        "https://soundcloud.com/djeduardomartinsoficial/abracadabra-lady-gaga-dj",
+    },
+    {
+      title:
+        "Alone (Offer Nissim feat. Maya Simantov - Tommy Love feat. Dj Eduardo Martins)",
+      slug: "alone-offer-nissim-tommy-love",
+      genre: "Remix",
+      source: "SOUNDCLOUD" as const,
+      soundcloudUrl:
+        "https://soundcloud.com/djeduardomartinsoficial/offer-nissim-feat-maya",
+    },
+  ];
+
+  for (const track of tracks) {
+    await prisma.track.upsert({
+      where: { slug: track.slug },
+      update: track,
+      create: track,
     });
-    console.log("Faixas de exemplo criadas.");
   }
+  console.log(`${tracks.length} faixas do SoundCloud sincronizadas.`);
 }
 
 main()

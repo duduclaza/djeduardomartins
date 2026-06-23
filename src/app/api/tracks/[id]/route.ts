@@ -44,7 +44,7 @@ export async function DELETE(
     await prisma.track.delete({ where: { id } });
 
     for (const url of [track.audioUrl, track.coverUrl]) {
-      if (url.startsWith("/uploads/")) {
+      if (url?.startsWith("/uploads/")) {
         await fs.unlink(path.join(process.cwd(), "public", url)).catch(() => {});
       }
     }

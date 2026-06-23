@@ -1,16 +1,52 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { PlayCircle, ChevronDown } from "lucide-react";
 import InstagramIcon from "@/components/icons/InstagramIcon";
+import Particles from "@/components/Particles";
+import EqualizerBars from "@/components/EqualizerBars";
 
 export default function Hero() {
   const [imgOk, setImgOk] = useState(true);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [6, -6]), {
+    stiffness: 80,
+    damping: 12,
+  });
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-6, 6]), {
+    stiffness: 80,
+    damping: 12,
+  });
+
+  function handleMouseMove(e: React.MouseEvent<HTMLElement>) {
+    const rect = sectionRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
+    mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
+  }
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#07020f]">
+    <section
+      ref={sectionRef}
+      onMouseMove={handleMouseMove}
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#07020f]"
+    >
+      {/* Feixes de luz girando, evocando o palco */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-40 animate-beam-sweep">
+        <div
+          className="w-[140vmax] h-[140vmax]"
+          style={{
+            background:
+              "conic-gradient(from 0deg, transparent 0deg, rgba(255,43,214,0.25) 8deg, transparent 16deg, transparent 170deg, rgba(0,224,255,0.25) 178deg, transparent 186deg, transparent 360deg)",
+          }}
+        />
+      </div>
+
       {/* Diamond neon lines, evocando o palco */}
       <div className="absolute inset-0 flex items-center justify-center opacity-60">
         {[420, 320, 220].map((size, i) => (
@@ -29,10 +65,12 @@ export default function Hero() {
         ))}
       </div>
 
+      <Particles />
+
       {/* Foto do DJ */}
       {imgOk && (
         <img
-          src="/images/hero-dj.jpg"
+          src="/images/hero-dj.png"
           alt="DJ Eduardo Claza"
           onError={() => setImgOk(false)}
           className="absolute inset-0 w-full h-full object-cover object-top opacity-90"
@@ -47,6 +85,7 @@ export default function Hero() {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, ease: "easeOut" }}
+        style={{ rotateX, rotateY }}
         className="relative z-10 text-center px-5 mt-20"
       >
         <p className="uppercase tracking-[0.3em] text-xs sm:text-sm text-neon-blue mb-4">
@@ -60,6 +99,10 @@ export default function Hero() {
           celebra a comunidade LGBTQIA+ — tribal house e pop house pra fazer a
           pista vibrar.
         </p>
+
+        <div className="flex justify-center mt-6">
+          <EqualizerBars className="h-8" />
+        </div>
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
           <Link href="/musicas" className="btn-neon">

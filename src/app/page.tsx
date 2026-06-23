@@ -5,6 +5,7 @@ import Hero from "@/components/Hero";
 import SectionReveal from "@/components/SectionReveal";
 import TrackCard from "@/components/TrackCard";
 import ImgWithFallback from "@/components/ImgWithFallback";
+import Marquee from "@/components/Marquee";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
@@ -21,6 +22,8 @@ export default async function Home() {
   return (
     <div>
       <Hero />
+
+      <Marquee text="Tribal House · Pop House · Pride Edition · @djeduardomartins" />
 
       <section id="sobre" className="relative py-24 px-5 bg-[#07020f]">
         <div className="mx-auto max-w-5xl grid md:grid-cols-2 gap-10 items-center">
@@ -63,7 +66,7 @@ export default async function Home() {
           <SectionReveal delay={0.15} className="relative">
             <div className="aspect-[4/5] rounded-2xl overflow-hidden glow-border">
               <ImgWithFallback
-                src="/images/about-dj.jpg"
+                src="/images/about-dj.png"
                 alt="DJ Eduardo Claza no palco"
                 className="w-full h-full object-cover"
               />
@@ -102,7 +105,7 @@ export default async function Home() {
       <section id="agenda" className="py-24 px-5 bg-[#0c0418]">
         <SectionReveal className="mx-auto max-w-3xl text-center glass-panel glow-border rounded-3xl p-10">
           <h2 className="font-display text-2xl sm:text-3xl text-white mb-4">
-            Quer me levar pra tocar na sua casa ou evento?
+            Quer me levar pro seu evento?
           </h2>
           <p className="text-white/70 mb-8">
             Bookings, parcerias e contratações — vamos levar o tribal house e

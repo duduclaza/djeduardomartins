@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Download, Lock, Tag } from "lucide-react";
+import SoundCloudEmbed from "@/components/SoundCloudEmbed";
 
 export type TrackCardData = {
   id: string;
@@ -7,8 +8,10 @@ export type TrackCardData = {
   slug: string;
   genre: string;
   description: string | null;
-  coverUrl: string;
-  audioUrl: string;
+  coverUrl: string | null;
+  audioUrl: string | null;
+  source: "UPLOAD" | "SOUNDCLOUD";
+  soundcloudUrl: string | null;
   isFree: boolean;
   priceCents: number;
 };
@@ -20,11 +23,30 @@ export default function TrackCard({
   track: TrackCardData;
   isLoggedIn: boolean;
 }) {
+  if (track.source === "SOUNDCLOUD" && track.soundcloudUrl) {
+    return (
+      <div className="glass-panel glow-border rounded-2xl overflow-hidden flex flex-col">
+        <SoundCloudEmbed url={track.soundcloudUrl} height={300} />
+        <div className="p-5 flex flex-col gap-1">
+          <h3 className="font-display text-lg text-white">{track.title}</h3>
+          <p className="text-xs uppercase tracking-wider text-neon-blue">
+            {track.genre}
+          </p>
+          {track.description && (
+            <p className="text-sm text-white/60 line-clamp-2 mt-1">
+              {track.description}
+            </p>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="glass-panel glow-border rounded-2xl overflow-hidden flex flex-col">
       <div className="relative aspect-square">
         <img
-          src={track.coverUrl}
+          src={track.coverUrl ?? "/images/covers/placeholder-1.svg"}
           alt={track.title}
           className="w-full h-full object-cover"
         />
@@ -48,12 +70,14 @@ export default function TrackCard({
           </p>
         )}
 
-        <audio
-          controls
-          preload="none"
-          className="w-full mt-1 accent-pink-500"
-          src={track.audioUrl}
-        />
+        {track.audioUrl && (
+          <audio
+            controls
+            preload="none"
+            className="w-full mt-1 accent-pink-500"
+            src={track.audioUrl}
+          />
+        )}
 
         <div className="mt-auto pt-2">
           {track.isFree ? (
