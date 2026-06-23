@@ -8,6 +8,8 @@ import ImgWithFallback from "@/components/ImgWithFallback";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const session = await auth();
   const tracks = await prisma.track.findMany({

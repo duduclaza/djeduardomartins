@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import UploadTrackForm from "@/components/admin/UploadTrackForm";
 import TrackRow from "@/components/admin/TrackRow";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminPage() {
   const [tracks, memberCount] = await Promise.all([
     prisma.track.findMany({ orderBy: { createdAt: "desc" } }),

@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import TrackCard from "@/components/TrackCard";
 import SectionReveal from "@/components/SectionReveal";
 
+export const dynamic = "force-dynamic";
+
 export default async function MembrosAreaPage() {
   const session = await auth();
   const tracks = await prisma.track.findMany({

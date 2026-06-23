@@ -7,6 +7,8 @@ export const metadata = {
   title: "Músicas | DJ Eduardo Claza",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function MusicasPage() {
   const session = await auth();
   const tracks = await prisma.track.findMany({
