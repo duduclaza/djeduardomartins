@@ -4,6 +4,9 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SessionProvider from "@/components/providers/SessionProvider";
+import PageTransition from "@/components/PageTransition";
+import ScrollProgress from "@/components/ScrollProgress";
+import CursorGlow from "@/components/CursorGlow";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -40,8 +43,12 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <SessionProvider>
+          <ScrollProgress />
+          <CursorGlow />
           <Navbar />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1">
+            <PageTransition>{children}</PageTransition>
+          </main>
           <Footer />
         </SessionProvider>
       </body>

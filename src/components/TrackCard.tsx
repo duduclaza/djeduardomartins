@@ -25,7 +25,7 @@ export default function TrackCard({
 }) {
   if (track.source === "SOUNDCLOUD" && track.soundcloudUrl) {
     return (
-      <div className="glass-panel glow-border rounded-2xl overflow-hidden flex flex-col">
+      <div className="group glass-panel glow-border rounded-2xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.015] hover:shadow-[0_0_35px_rgba(255,43,214,0.35)]">
         <SoundCloudEmbed url={track.soundcloudUrl} height={300} />
         <div className="p-5 flex flex-col gap-1">
           <h3 className="font-display text-lg text-white">{track.title}</h3>
@@ -43,12 +43,12 @@ export default function TrackCard({
   }
 
   return (
-    <div className="glass-panel glow-border rounded-2xl overflow-hidden flex flex-col">
+    <div className="group glass-panel glow-border rounded-2xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.015] hover:shadow-[0_0_35px_rgba(255,43,214,0.35)]">
       <div className="relative aspect-square">
         <img
           src={track.coverUrl ?? "/images/covers/placeholder-1.svg"}
           alt={track.title}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
         <span className="absolute top-3 right-3 inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-black/60 text-neon-gold uppercase tracking-wide">
           <Tag size={12} />

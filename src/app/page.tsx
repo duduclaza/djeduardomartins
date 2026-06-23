@@ -4,8 +4,8 @@ import InstagramIcon from "@/components/icons/InstagramIcon";
 import Hero from "@/components/Hero";
 import SectionReveal from "@/components/SectionReveal";
 import TrackCard from "@/components/TrackCard";
-import ImgWithFallback from "@/components/ImgWithFallback";
 import Marquee from "@/components/Marquee";
+import PrideFloorScene from "@/components/PrideFloorScene";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
@@ -65,11 +65,7 @@ export default async function Home() {
 
           <SectionReveal delay={0.15} className="relative">
             <div className="aspect-[4/5] rounded-2xl overflow-hidden glow-border">
-              <ImgWithFallback
-                src="/images/about-dj.png"
-                alt="DJ Eduardo Claza no palco"
-                className="w-full h-full object-cover"
-              />
+              <PrideFloorScene />
             </div>
           </SectionReveal>
         </div>
