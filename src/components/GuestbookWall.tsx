@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import { addSignature } from "@/app/actions";
 import { PenLine } from "lucide-react";
 
@@ -25,6 +26,7 @@ export default function GuestbookWall({ signatures }: { signatures: Signature[] 
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+  const constraintsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -128,7 +130,7 @@ export default function GuestbookWall({ signatures }: { signatures: Signature[] 
       </div>
 
       {/* The Wall (Canvas for signatures) */}
-      <div className="relative w-full h-[400px] border border-white/10 rounded-xl bg-[#05010a] shadow-inner overflow-hidden">
+      <div ref={constraintsRef} className="relative w-full h-[400px] border border-white/10 rounded-xl bg-[#05010a] shadow-inner overflow-hidden">
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: "radial-gradient(circle at center, #ff00ff 0%, transparent 70%)"
         }}></div>
@@ -141,14 +143,19 @@ export default function GuestbookWall({ signatures }: { signatures: Signature[] 
           mounted && signatures.map((sig, i) => {
             const { colorClass, style } = getStyleForSignature(sig.id, i);
             return (
-              <div 
+              <motion.div 
                 key={sig.id}
-                className={`absolute font-bold text-xl drop-shadow-[0_0_8px_currentColor] transition-all hover:scale-110 cursor-default select-none ${colorClass}`}
+                drag
+                dragConstraints={constraintsRef}
+                whileDrag={{ scale: 1.2, zIndex: 50, cursor: "grabbing" }}
+                dragElastic={0.2}
+                dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
+                className={`absolute font-bold text-xl drop-shadow-[0_0_8px_currentColor] cursor-grab select-none ${colorClass}`}
                 style={style}
                 title={`Assinado em ${new Date(sig.createdAt).toLocaleDateString('pt-BR')}`}
               >
                 {sig.name}
-              </div>
+              </motion.div>
             );
           })
         )}
