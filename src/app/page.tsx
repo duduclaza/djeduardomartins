@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const session = await auth();
-  let tracks = [];
+  let tracks: any[] = [];
   try {
     tracks = await prisma.track.findMany({
       where: { published: true },
