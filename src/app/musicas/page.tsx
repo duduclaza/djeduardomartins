@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
 export const metadata = {
-  title: "Músicas | DJ Eduardo Claza",
+  title: "Músicas | DJ Eduardo Martins",
 };
 
 export const dynamic = "force-dynamic";

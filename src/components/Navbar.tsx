@@ -23,7 +23,7 @@ export default function Navbar() {
           href="/"
           className="font-display text-lg sm:text-xl tracking-widest text-white"
         >
-          DJ <span className="gradient-text">EDUARDO CLAZA</span>
+          DJ <span className="gradient-text">EDUARDO MARTINS</span>
         </Link>
 
         <div className="hidden md:flex items-center gap-8">

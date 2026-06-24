@@ -20,12 +20,12 @@ const orbitron = Orbitron({
 });
 
 export const metadata: Metadata = {
-  title: "DJ EDUARDO CLAZA | Tribal House & Pop House",
+  title: "DJ EDUARDO MARTINS | Tribal House & Pop House",
   description:
-    "DJ Eduardo Claza — tribal house e pop house para a pista. Ouça, baixe e acompanhe as produções de Eduardo Claza, com 16 anos de carreira em casas noturnas de Minas Gerais e São Paulo, voltado ao público LGBTQIA+.",
+    "DJ Eduardo Martins — tribal house e pop house para a pista. Ouça, baixe e acompanhe as produções de Eduardo Martins, com 16 anos de carreira em casas noturnas de Minas Gerais e São Paulo, voltado ao público LGBTQIA+.",
   metadataBase: new URL("https://djeduardoclaza.com"),
   openGraph: {
-    title: "DJ EDUARDO CLAZA",
+    title: "DJ EDUARDO MARTINS",
     description: "Tribal House & Pop House — Pride Edition",
     type: "website",
   },

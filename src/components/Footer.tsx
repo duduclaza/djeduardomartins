@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="mx-auto max-w-6xl px-5 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
         <div>
           <p className="font-display text-sm tracking-widest text-white/90">
-            DJ <span className="gradient-text">EDUARDO CLAZA</span>
+            DJ <span className="gradient-text">EDUARDO MARTINS</span>
           </p>
           <p className="text-xs text-white/50 mt-1">
             Tribal House &amp; Pop House — Pride Edition
@@ -36,7 +36,7 @@ export default function Footer() {
       </div>
 
       <p className="text-center text-xs text-white/30 pb-6">
-        © {new Date().getFullYear()} DJ Eduardo Claza. Todos os direitos reservados.
+        © {new Date().getFullYear()} DJ Eduardo Martins. Todos os direitos reservados.
       </p>
     </footer>
   );

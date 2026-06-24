@@ -13,11 +13,16 @@ export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const session = await auth();
-  const tracks = await prisma.track.findMany({
-    where: { published: true },
-    orderBy: { releasedAt: "desc" },
-    take: 3,
-  });
+  let tracks = [];
+  try {
+    tracks = await prisma.track.findMany({
+      where: { published: true },
+      orderBy: { releasedAt: "desc" },
+      take: 3,
+    });
+  } catch (error) {
+    console.error("Database connection error, using empty tracks for now.", error);
+  }
 
   return (
     <div>
@@ -25,47 +30,69 @@ export default async function Home() {
 
       <Marquee text="Tribal House · Pop House · Pride Edition · @djeduardomartins" />
 
-      <section id="sobre" className="relative py-24 px-5 bg-[#07020f]">
-        <div className="mx-auto max-w-5xl grid md:grid-cols-2 gap-10 items-center">
+      <section id="sobre" className="relative py-32 px-5 min-h-[80vh] flex items-center justify-center overflow-hidden">
+        {/* Background Video */}
+        <div className="absolute inset-0 z-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="object-cover w-full h-full opacity-40 mix-blend-screen"
+          >
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-crowd-in-a-nightclub-with-purple-lights-42588-large.mp4" type="video/mp4" />
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-dj-playing-music-at-a-nightclub-party-10118-large.mp4" type="video/mp4" />
+          </video>
+          {/* Gradients to blend smoothly with top and bottom sections */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#07020f] via-transparent to-[#07020f]"></div>
+          {/* Radial dark overlay to make text pop */}
+          <div className="absolute inset-0 bg-black/50"></div>
+        </div>
+
+        <div className="relative z-10 mx-auto max-w-4xl text-center flex flex-col items-center">
           <SectionReveal>
-            <p className="uppercase tracking-[0.3em] text-xs text-neon-pink mb-3">
-              Sobre
+            <p className="uppercase tracking-[0.3em] text-xs text-neon-pink mb-4 font-bold drop-shadow-md">
+              Sobre Mim
             </p>
-            <h2 className="font-display text-3xl sm:text-4xl text-white mb-5">
-              16 anos levando o <span className="gradient-text">tribal house</span> pra pista
+            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-white mb-10 drop-shadow-lg leading-tight">
+              16 anos levando o <br className="hidden sm:block" />
+              <span className="gradient-text">tribal house</span> pra pista
             </h2>
-            <p className="text-white/70 leading-relaxed">
-              Eduardo Claza já passou pelas principais casas noturnas de Minas
-              Gerais e São Paulo, construindo um som que mistura tribal house
-              e pop house com uma energia voltada para celebrar a comunidade
-              LGBTQIA+. Mais do que um set, uma experiência imersiva guiada
-              por luz, groove e pertencimento.
-            </p>
-
-            <div className="mt-8 grid grid-cols-2 gap-4 text-sm text-white/70">
-              <div className="flex items-center gap-2">
-                <Disc3 size={18} className="text-neon-blue" /> 16 anos de carreira
+            
+            <div className="glass-panel glow-border rounded-3xl p-8 sm:p-12 backdrop-blur-xl bg-[#07020f]/60 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-neon-pink/10 to-neon-blue/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+              
+              <p className="relative z-10 text-white/90 text-lg sm:text-xl leading-relaxed font-light text-center">
+                Eduardo Martins já passou pelas principais casas noturnas de Minas
+                Gerais e São Paulo, construindo um som que mistura tribal house
+                e pop house com uma energia voltada para celebrar a comunidade
+                LGBTQIA+. Mais do que um set, uma experiência imersiva guiada
+                por luz, groove e pertencimento.
+              </p>
+              
+              <div className="relative z-10 mt-12 grid grid-cols-2 md:grid-cols-4 gap-8 text-sm text-white/80 border-t border-white/10 pt-8">
+                <div className="flex flex-col items-center gap-3 transform transition hover:scale-105 hover:text-neon-blue">
+                  <Disc3 size={28} className="text-neon-blue drop-shadow-[0_0_10px_rgba(0,255,255,0.5)]" /> 
+                  <span className="font-medium tracking-wide">16 anos de carreira</span>
+                </div>
+                <div className="flex flex-col items-center gap-3 transform transition hover:scale-105 hover:text-neon-blue">
+                  <MapPin size={28} className="text-neon-blue drop-shadow-[0_0_10px_rgba(0,255,255,0.5)]" /> 
+                  <span className="font-medium tracking-wide">MG &amp; SP</span>
+                </div>
+                <div className="flex flex-col items-center gap-3 transform transition hover:scale-105 hover:text-neon-blue">
+                  <HeartHandshake size={28} className="text-neon-blue drop-shadow-[0_0_10px_rgba(0,255,255,0.5)]" /> 
+                  <span className="font-medium tracking-wide">Pride friendly</span>
+                </div>
+                <a
+                  href="https://instagram.com/djeduardomartins"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex flex-col items-center gap-3 hover:text-neon-pink transition-all group/link transform hover:scale-105"
+                >
+                  <InstagramIcon size={28} className="text-neon-blue group-hover/link:text-neon-pink transition-colors drop-shadow-[0_0_10px_rgba(0,255,255,0.5)] group-hover/link:drop-shadow-[0_0_10px_rgba(255,0,255,0.5)]" /> 
+                  <span className="font-medium tracking-wide">@djeduardomartins</span>
+                </a>
               </div>
-              <div className="flex items-center gap-2">
-                <MapPin size={18} className="text-neon-blue" /> MG &amp; SP
-              </div>
-              <div className="flex items-center gap-2">
-                <HeartHandshake size={18} className="text-neon-blue" /> Pride friendly
-              </div>
-              <a
-                href="https://instagram.com/djeduardomartins"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-2 hover:text-neon-pink"
-              >
-                <InstagramIcon size={18} className="text-neon-blue" /> @djeduardomartins
-              </a>
-            </div>
-          </SectionReveal>
-
-          <SectionReveal delay={0.15} className="relative">
-            <div className="aspect-[4/5] rounded-2xl overflow-hidden glow-border">
-              <PrideFloorScene />
             </div>
           </SectionReveal>
         </div>
