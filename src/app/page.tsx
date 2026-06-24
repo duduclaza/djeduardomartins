@@ -6,6 +6,7 @@ import SectionReveal from "@/components/SectionReveal";
 import TrackCard from "@/components/TrackCard";
 import Marquee from "@/components/Marquee";
 import PrideFloorScene from "@/components/PrideFloorScene";
+import GuestbookWall from "@/components/GuestbookWall";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
@@ -22,6 +23,16 @@ export default async function Home() {
     });
   } catch (error) {
     console.error("Database connection error, using empty tracks for now.", error);
+  }
+
+  let signatures: any[] = [];
+  try {
+    signatures = await prisma.signature.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 100, // Limit to 100 to avoid cluttering too much over time
+    });
+  } catch (error) {
+    console.error("Failed to load signatures", error);
   }
 
   return (
@@ -144,6 +155,8 @@ export default async function Home() {
           </a>
         </SectionReveal>
       </section>
+
+      <GuestbookWall signatures={signatures} />
     </div>
   );
 }

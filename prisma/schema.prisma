@@ -60,3 +60,9 @@ model Download {
 
   @@unique([userId, trackId])
 }
+
+model Signature {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+}
