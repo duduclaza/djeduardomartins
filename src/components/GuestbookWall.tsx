@@ -108,7 +108,7 @@ export default function GuestbookWall({ signatures }: { signatures: Signature[] 
           <input
             type="text"
             maxLength={30}
-            placeholder="Escreva seu nome..."
+            placeholder="Seu nome ou seu @..."
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="flex-1 bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-neon-pink transition-colors"

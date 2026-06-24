@@ -3,34 +3,15 @@
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
-import { PlayCircle, ChevronDown, Volume2, VolumeX } from "lucide-react";
+import { PlayCircle, ChevronDown } from "lucide-react";
 import InstagramIcon from "@/components/icons/InstagramIcon";
 import Particles from "@/components/Particles";
 import EqualizerBars from "@/components/EqualizerBars";
 
 export default function Hero() {
   const [imgOk, setImgOk] = useState(true);
-  const [isMuted, setIsMuted] = useState(true);
   const [showModal, setShowModal] = useState(true);
   const sectionRef = useRef<HTMLElement>(null);
-  const audioRef = useRef<HTMLAudioElement>(null);
-
-  useEffect(() => {
-    // Configura o volume, mas o Play será chamado pela permissão do modal
-    if (audioRef.current) {
-      audioRef.current.volume = 0.4;
-    }
-  }, []);
-
-  const toggleMute = () => {
-    if (audioRef.current) {
-      if (audioRef.current.paused) {
-        audioRef.current.play();
-      }
-      audioRef.current.muted = !audioRef.current.muted;
-      setIsMuted(audioRef.current.muted);
-    }
-  };
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -131,23 +112,7 @@ export default function Hero() {
       <div className="absolute inset-0 bg-gradient-to-t from-[#07020f] via-[#07020f]/40 to-[#07020f]/20 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-b from-[#07020f]/60 via-transparent to-transparent pointer-events-none" />
 
-      {/* Audio Player */}
-      <audio
-        ref={audioRef}
-        loop
-        autoPlay
-        src="https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3"
-      />
-      
-      {/* Botão de Som */}
-      <button
-        onClick={toggleMute}
-        className="absolute bottom-8 right-8 z-50 p-4 rounded-full bg-black/60 backdrop-blur-md border border-neon-pink/50 hover:bg-neon-pink/20 transition-all text-white hover:text-white group flex items-center gap-3 animate-pulse-glow shadow-[0_0_20px_rgba(255,43,214,0.4)]"
-        title="Ativar/Desativar Som"
-      >
-        <span className="text-sm font-bold uppercase tracking-widest hidden group-hover:block transition-all mr-2">Vibe</span>
-        {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} className="text-neon-pink drop-shadow-[0_0_10px_rgba(255,43,214,1)]" />}
-      </button>
+      <div className="absolute inset-0 bg-gradient-to-b from-[#07020f]/60 via-transparent to-transparent pointer-events-none" />
 
       <motion.div
         initial={{ opacity: 0, y: 30 }}
