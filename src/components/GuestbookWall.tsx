@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { addSignature } from "@/app/actions";
-import { PenLine } from "lucide-react";
+import { addSignature, deleteSignature, editSignature } from "@/app/actions";
+import { PenLine, Trash2, Edit2 } from "lucide-react";
 
 type Signature = {
   id: string;
@@ -21,7 +21,7 @@ function mulberry32(a: number) {
   }
 }
 
-export default function GuestbookWall({ signatures }: { signatures: Signature[] }) {
+export default function GuestbookWall({ signatures, isAdmin = false }: { signatures: Signature[], isAdmin?: boolean }) {
   const [name, setName] = useState("");
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,6 +53,19 @@ export default function GuestbookWall({ signatures }: { signatures: Signature[] 
     setIsPending(false);
   }
 
+  async function handleDelete(id: string) {
+    if (window.confirm("Certeza que deseja apagar este nome?")) {
+      await deleteSignature(id);
+    }
+  }
+
+  async function handleEdit(id: string, oldName: string) {
+    const newName = window.prompt("Editar nome:", oldName);
+    if (newName && newName.trim() !== "" && newName !== oldName) {
+      await editSignature(id, newName);
+    }
+  }
+
   // Pre-calculate positions using a seeded random based on the signature ID
   const getStyleForSignature = (id: string, index: number) => {
     // Generate a simple numeric seed from the string ID
@@ -71,14 +84,27 @@ export default function GuestbookWall({ signatures }: { signatures: Signature[] 
     const left = Math.floor(rand() * 80) + 10; // 10% to 90%
     const scale = 0.8 + rand() * 0.6; // 0.8 to 1.4
     
+    // Float animation params
+    const xMovement = (rand() - 0.5) * 80;
+    const yMovement = (rand() - 0.5) * 80;
+    const floatDuration = 15 + rand() * 15;
+    
     return {
       colorClass: color,
       style: {
         top: `${top}%`,
         left: `${left}%`,
-        transform: `rotate(${rotate}deg) scale(${scale})`,
         fontFamily: "'Caveat', 'Comic Sans MS', cursive, sans-serif" // Attempt a handwriting font
-      }
+      },
+      initialRotate: rotate,
+      initialScale: scale,
+      animateParams: {
+        x: [0, xMovement, 0, -xMovement, 0],
+        y: [0, yMovement, 0, -yMovement, 0],
+        rotate: [rotate, rotate + 10, rotate, rotate - 10, rotate],
+        scale: [scale, scale * 1.05, scale, scale * 0.95, scale],
+      },
+      floatDuration
     };
   };
 
@@ -141,20 +167,42 @@ export default function GuestbookWall({ signatures }: { signatures: Signature[] 
           </div>
         ) : (
           mounted && signatures.map((sig, i) => {
-            const { colorClass, style } = getStyleForSignature(sig.id, i);
+            const { colorClass, style, initialRotate, initialScale, animateParams, floatDuration } = getStyleForSignature(sig.id, i);
             return (
               <motion.div 
                 key={sig.id}
                 drag
                 dragConstraints={constraintsRef}
+                initial={{ rotate: initialRotate, scale: initialScale }}
+                animate={animateParams}
+                transition={{ duration: floatDuration, repeat: Infinity, ease: "linear" }}
                 whileDrag={{ scale: 1.2, zIndex: 50, cursor: "grabbing" }}
                 dragElastic={0.2}
                 dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
-                className={`absolute font-bold text-xl drop-shadow-[0_0_8px_currentColor] cursor-grab select-none ${colorClass}`}
+                className={`absolute font-bold text-xl drop-shadow-[0_0_8px_currentColor] cursor-grab select-none group ${colorClass}`}
                 style={style}
                 title={`Assinado em ${new Date(sig.createdAt).toLocaleDateString('pt-BR')}`}
               >
                 {sig.name}
+
+                {isAdmin && (
+                  <div className="absolute -top-10 left-1/2 -translate-x-1/2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 border border-white/20 rounded-lg px-2 py-1 z-50 shadow-xl">
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); handleEdit(sig.id, sig.name); }} 
+                      className="text-white hover:text-neon-blue p-1 transition-colors"
+                      title="Editar"
+                    >
+                      <Edit2 size={14} />
+                    </button>
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); handleDelete(sig.id); }} 
+                      className="text-white hover:text-red-500 p-1 transition-colors"
+                      title="Apagar"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                )}
               </motion.div>
             );
           })

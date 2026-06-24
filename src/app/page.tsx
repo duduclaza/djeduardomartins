@@ -156,7 +156,7 @@ export default async function Home() {
         </SectionReveal>
       </section>
 
-      <GuestbookWall signatures={signatures} />
+      <GuestbookWall signatures={signatures} isAdmin={!!session} />
     </div>
   );
 }
